@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">YHacks</string>
     <string name="title_activity_maps">Map</string>
+    <string name="facebook_app_id">366288180429516</string>
+    <string name="home_page">Welcome to the home page!</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>
