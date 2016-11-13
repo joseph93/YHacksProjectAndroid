@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,6 +34,12 @@ public class MainFragment extends Fragment {
             Profile profile = Profile.getCurrentProfile();
             if(profile != null) {
                 textDetails.setText("Welcome " + profile.getFirstName() + "!");
+                /*
+                Fragment s_fragment = new SuggestionFragment();
+                FragmentManager fm = getActivity().getSupportFragmentManager();
+                        fm.beginTransaction()
+                        .replace(R.id.fragment_suggestion,s_fragment).commit();
+                 */
             }
         }
 
@@ -71,7 +78,7 @@ public class MainFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         LoginButton loginButton = (LoginButton) view.findViewById(R.id.fb_login_button);
         textDetails = (TextView)view.findViewById(R.id.text_details);
-        loginButton.setReadPermissions("user_friends");
+        loginButton.setReadPermissions("user_friends", "email", "user_events");
         loginButton.setFragment(this);
         loginButton.registerCallback(callbackManager, fbCallback);
     }
