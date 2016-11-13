@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,10 +35,11 @@ public class MainFragment extends Fragment {
             Profile profile = Profile.getCurrentProfile();
             Bundle bundle = new Bundle();
             bundle.putParcelable("profile", profile);
-            Fragment userFragment = new UserFragment();
-            userFragment.setArguments(bundle);
+            Fragment s_fragment = new SuggestionFragment();
+            s_fragment.setArguments(bundle);
             getActivity().getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_frame, userFragment, userFragment.getClass().getSimpleName()).addToBackStack(null).commit();
+                    .replace(R.id.fragment_frame, s_fragment, s_fragment.getClass().getSimpleName()).addToBackStack(null).commit();
+
         }
 
         @Override

@@ -14,8 +14,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_main);
-        Fragment fragment = new MainFragment();
+        Fragment m_fragment = new SuggestionFragment();
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_frame, fragment, fragment.getClass().getSimpleName()).addToBackStack(null).commit();
+                .replace(R.id.fragment_frame, m_fragment, m_fragment.getClass().getSimpleName()).addToBackStack(null).commit();
     }
 }
