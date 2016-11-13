@@ -1,8 +1,6 @@
 package com.example.josep.yhacks;
 
-import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,27 +11,33 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.facebook.AccessToken;
+import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.Profile;
+import com.facebook.ProfileTracker;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+
+import java.util.Arrays;
 
 
 public class MainFragment extends Fragment {
 
-    private TextView textDetails;
     private CallbackManager callbackManager;
     private FacebookCallback<LoginResult> fbCallback = new FacebookCallback<LoginResult>() {
         @Override
         public void onSuccess(LoginResult loginResult) {
             AccessToken accessToken = loginResult.getAccessToken();
             Profile profile = Profile.getCurrentProfile();
-            if(profile != null) {
-                textDetails.setText("Welcome " + profile.getFirstName() + "!");
-            }
+            Bundle bundle = new Bundle();
+            bundle.putParcelable("profile", profile);
+            Fragment userFragment = new UserFragment();
+            userFragment.setArguments(bundle);
+            getActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_frame, userFragment, userFragment.getClass().getSimpleName()).addToBackStack(null).commit();
         }
 
         @Override
@@ -46,6 +50,8 @@ public class MainFragment extends Fragment {
             Log.d("ERROR", error.getMessage());
         }
     };
+    private ProfileTracker pTracker;
+    private AccessTokenTracker aTracker;
 
     public MainFragment() {
         // Required empty public constructor
@@ -57,6 +63,22 @@ public class MainFragment extends Fragment {
         super.onCreate(savedInstanceState);
         FacebookSdk.sdkInitialize(getActivity().getApplicationContext());
         callbackManager = CallbackManager.Factory.create();
+        aTracker = new AccessTokenTracker() {
+            @Override
+            protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken) {
+
+            }
+        };
+
+        pTracker = new ProfileTracker() {
+            @Override
+            protected void onCurrentProfileChanged(Profile oldProfile, Profile currentProfile) {
+
+            }
+        };
+
+        aTracker.startTracking();
+        pTracker.startTracking();
     }
 
     @Override
@@ -67,13 +89,20 @@ public class MainFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        LoginButton loginButton = (LoginButton) view.findViewById(R.id.fb_login_button);
-        textDetails = (TextView)view.findViewById(R.id.text_details);
-        loginButton.setReadPermissions("user_friends");
-        loginButton.setFragment(this);
-        loginButton.registerCallback(callbackManager, fbCallback);
+        LoginButton loginButton = (LoginButton) view.findViewById(R.id.login_button);
+        if(loginButton != null) {
+            loginButton.setReadPermissions(Arrays.asList("user_friends", "email", "public_profile", "user_events"));
+            loginButton.setFragment(this);
+            loginButton.registerCallback(callbackManager, fbCallback);
+        }
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 
     @Override
