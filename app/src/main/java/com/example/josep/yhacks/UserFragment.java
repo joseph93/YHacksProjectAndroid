@@ -1,6 +1,8 @@
 package com.example.josep.yhacks;
 
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -12,6 +14,9 @@ import android.widget.ImageView;
 
 import com.facebook.FacebookSdk;
 import com.facebook.Profile;
+
+import java.io.InputStream;
+import java.net.URL;
 
 
 /**
