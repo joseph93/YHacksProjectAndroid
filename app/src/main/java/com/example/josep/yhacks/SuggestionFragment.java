@@ -15,7 +15,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.facebook.AccessToken;
 import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
 
 
 /**
@@ -23,7 +26,7 @@ import com.facebook.FacebookSdk;
  */
 public class SuggestionFragment extends Fragment {
 
-
+    private AccessToken token;
     public SuggestionFragment() {
         // Required empty public constructor
     }
@@ -47,10 +50,14 @@ public class SuggestionFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
        final TextView mTextView = (TextView) view.findViewById(R.id.response);
+        Bundle bundle = this.getArguments();
+        token = bundle.getParcelable("token");
 
 // Instantiate the RequestQueue.
         RequestQueue queue = Volley.newRequestQueue(getContext());
-        String url ="http://graph.facebook.com";
+        String url ="http://graph.facebook.com/search?q=coffee&type=place&center=37.76,-122.427&distance=1000";
+
+        /*
 
 // Request a string response from the provided URL.
        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
@@ -68,6 +75,25 @@ public class SuggestionFragment extends Fragment {
         });
 // Add the request to the RequestQueue.
        queue.add(stringRequest);
+*/
 
+        GraphRequest request = GraphRequest.newGraphPathRequest(
+                token,
+                "/search",
+                new GraphRequest.Callback() {
+                    @Override
+                    public void onCompleted(GraphResponse response) {
+                        // Insert your code here
+                        mTextView.setText("Response is: "+ response);
+                    }
+                });
+
+        Bundle parameters = new Bundle();
+        parameters.putString("q", "coffee");
+        parameters.putString("type", "place");
+        parameters.putString("center", "37.76,-122.427");
+        parameters.putString("distance", "1000");
+        request.setParameters(parameters);
+        request.executeAsync();
     }
 }

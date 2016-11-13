@@ -35,6 +35,7 @@ public class MainFragment extends Fragment {
             Profile profile = Profile.getCurrentProfile();
             Bundle bundle = new Bundle();
             bundle.putParcelable("profile", profile);
+            bundle.putParcelable("token", accessToken);
             Fragment s_fragment = new SuggestionFragment();
             s_fragment.setArguments(bundle);
             getActivity().getSupportFragmentManager().beginTransaction()
